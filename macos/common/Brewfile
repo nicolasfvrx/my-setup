@@ -1,0 +1,7 @@
+# Brewfile — outils OBLIGATOIRES requis par les scripts de setup.
+# Installés systématiquement, indépendamment de la sélection du menu.
+#
+# Les applications optionnelles (proposées dans le menu) sont dans apps.list.
+
+brew "dockutil"   # configuration du Dock (dock.sh)
+brew "mas"        # apps Mac App Store en CLI

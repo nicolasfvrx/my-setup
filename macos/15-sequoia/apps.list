@@ -1,0 +1,5 @@
+# Applications spécifiques à macOS 15 (Sequoia) — ajoutées au catalogue commun.
+# Même format que ../common/apps.list :  type|identifiant|libellé|on|off
+#
+# Exemple :
+# cask|some-sequoia-only-app|App spécifique Sequoia|off

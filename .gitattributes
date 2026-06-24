@@ -1,0 +1,15 @@
+# Normalisation des fins de ligne — crucial pour que les scripts bash
+# tournent sur macOS/Linux même créés/édités depuis Windows.
+* text=auto eol=lf
+
+# Scripts Windows en CRLF
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Binaires
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.heic binary
+*.icns binary

@@ -1,0 +1,50 @@
+# Catalogue des applications proposées dans le menu de sélection.
+#
+# Format :  type|identifiant|libellé|défaut
+#   type        = cask (app GUI) · brew (CLI) · mas (Mac App Store) · tap
+#   identifiant = nom du paquet  (pour mas : l'id numérique, via  mas search "Nom")
+#   défaut      = on (présélectionné) · off
+#
+# Édite librement : ajoute/retire des lignes. Les apps propres à une version
+# vont dans ../<version>/apps.list (ex: 15-sequoia/apps.list).
+
+# --- Navigateurs ---
+cask|arc|Arc|off
+cask|google-chrome|Google Chrome|off
+cask|firefox|Firefox|off
+
+# --- Dev / CLI ---
+cask|visual-studio-code|Visual Studio Code|on
+cask|ghostty|Ghostty (terminal)|on
+cask|iterm2|iTerm2|off
+cask|docker|Docker Desktop|off
+brew|git|Git|on
+brew|gh|GitHub CLI|on
+brew|node|Node.js|off
+brew|fzf|fzf (fuzzy finder)|on
+brew|ripgrep|ripgrep|on
+brew|bat|bat (cat amélioré)|off
+brew|eza|eza (ls amélioré)|off
+brew|jq|jq|off
+
+# --- Productivité ---
+cask|raycast|Raycast|on
+cask|rectangle|Rectangle (gestion fenêtres)|on
+cask|obsidian|Obsidian|off
+cask|notion|Notion|off
+
+# --- Communication ---
+cask|slack|Slack|off
+cask|discord|Discord|off
+
+# --- Médias ---
+cask|spotify|Spotify|off
+cask|vlc|VLC|off
+
+# --- Utilitaires ---
+cask|stats|Stats (moniteur menu bar)|off
+cask|the-unarchiver|The Unarchiver|off
+cask|appcleaner|AppCleaner|off
+
+# --- Mac App Store ---
+mas|937984704|Amphetamine|off

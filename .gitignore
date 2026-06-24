@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+.AppleDouble
+._*
+
+# Éditeurs
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Secrets — ne jamais committer
+*.local
+.env
