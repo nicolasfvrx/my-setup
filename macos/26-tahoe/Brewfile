@@ -1,0 +1,5 @@
+# Brewfile — paquets spécifiques à macOS 26 (Tahoe) UNIQUEMENT.
+# Le commun va dans ../common/Brewfile. Appliqué APRÈS le common.
+#
+# Exemple :
+# cask "some-app-only-on-tahoe"

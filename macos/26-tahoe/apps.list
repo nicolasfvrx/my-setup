@@ -1,0 +1,5 @@
+# Applications spécifiques à macOS 26 (Tahoe) — ajoutées au catalogue commun.
+# Même format que ../common/apps.list :  type|identifiant|libellé|on/off
+#
+# Exemple :
+# cask|some-tahoe-only-app|App spécifique Tahoe|off
