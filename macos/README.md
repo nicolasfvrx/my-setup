@@ -4,6 +4,14 @@ Installe les applications (Homebrew) et configure l'OS (réglages système, Dock
 fond d'écran) via un **menu interactif**, de façon **idempotente** (rejouable
 sans casse) et **par couches de version**.
 
+## Prérequis
+
+- Un **compte administrateur** (Homebrew utilise `sudo` en interne pour créer
+  `/opt/homebrew`). Vérifier : `id -Gn | tr ' ' '\n' | grep -qx admin && echo OK`.
+- Lancer le script **sans `sudo`** : Homebrew refuse de tourner en root.
+  Le script refuse d'ailleurs de démarrer en root et le rappelle.
+- Quand l'installeur Homebrew demande ton mot de passe, c'est normal — saisis-le.
+
 ## Lancer
 
 ```sh

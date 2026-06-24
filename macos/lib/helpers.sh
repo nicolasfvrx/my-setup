@@ -30,17 +30,35 @@ print_header() {
   printf '\033[34m%s\033[0m\n' "$line"
 }
 
-# Installe Homebrew si absent puis le charge dans le PATH (Apple Silicon ou Intel).
-ensure_brew() {
-  if ! command -v brew >/dev/null 2>&1; then
-    info "Installation de Homebrew…"
-    NONINTERACTIVE=1 /bin/bash -c \
-      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  fi
+# Vrai si l'utilisateur courant est administrateur (membre du groupe admin).
+is_admin() { id -Gn 2>/dev/null | tr ' ' '\n' | grep -qx admin; }
+
+# Charge brew dans le PATH (Apple Silicon puis Intel).
+load_brew_env() {
   if [[ -x /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   elif [[ -x /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
   fi
+}
+
+# Installe Homebrew si absent puis le charge dans le PATH.
+# À lancer SANS sudo, depuis un compte ADMINISTRATEUR.
+ensure_brew() {
+  if command -v brew >/dev/null 2>&1; then load_brew_env; return; fi
+
+  if ! is_admin; then
+    err "Homebrew nécessite un compte administrateur (compte courant : $(whoami))."
+    err "Réglages Système ▸ Utilisateurs et groupes ▸ « Autoriser à administrer »,"
+    err "ou depuis un compte admin :  sudo dscl . -append /Groups/admin GroupMembership $(whoami)"
+    exit 1
+  fi
+
+  info "Installation de Homebrew — ton mot de passe administrateur va être demandé."
+  sudo -v || { err "Accès administrateur refusé — installation annulée."; exit 1; }
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  load_brew_env
   command -v brew >/dev/null 2>&1 && ok "Homebrew prêt ($(brew --version | head -n1))"
 }

@@ -143,6 +143,13 @@ interactive() {
 main() {
   case "${1:-}" in -h|--help) usage; return 0 ;; esac
 
+  if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    err "Ne lance pas ce script en root / avec sudo."
+    err "Lance-le en utilisateur normal (administrateur) :  bash install.sh"
+    err "→ Homebrew refuse de tourner en root, et les réglages viseraient /var/root."
+    exit 1
+  fi
+
   print_header
 
   if [[ $# -gt 0 ]]; then
