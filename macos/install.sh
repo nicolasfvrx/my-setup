@@ -98,6 +98,7 @@ interactive() {
   # 1) Quelles étapes ?
   MENU_LABELS=("Installer des applications" "Réglages système" "Dock (icônes + comportement)" "Fond d'écran")
   MENU_DEFAULTS=("on" "on" "on" "on")
+  MENU_KIND=("item" "item" "item" "item")
   multiselect "Que veux-tu faire ?" || { warn "Annulé."; return 1; }
   local do_apps="${MENU_SELECTED[0]}" do_sys="${MENU_SELECTED[1]}"
   local do_dock="${MENU_SELECTED[2]}" do_wall="${MENU_SELECTED[3]}"
@@ -109,7 +110,14 @@ interactive() {
       build_app_menu
       echo
       multiselect "Applications à installer" || { warn "Annulé."; return 1; }
-      app_selected=("${MENU_SELECTED[@]}")
+      # Reconstruit app_selected (lignes "item" uniquement, mappées vers APP_*)
+      local nApps=${#APP_TYPE[@]} j i
+      app_selected=()
+      for ((j = 0; j < nApps; j++)); do app_selected[$j]="false"; done
+      for ((i = 0; i < ${#MENU_KIND[@]}; i++)); do
+        [[ "${MENU_KIND[$i]:-item}" == "item" ]] || continue
+        app_selected[${MENU_APP[$i]}]="${MENU_SELECTED[$i]}"
+      done
     else
       warn "Catalogue d'apps vide (apps.list) — étape ignorée."
       do_apps="false"

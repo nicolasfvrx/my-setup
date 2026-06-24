@@ -12,6 +12,8 @@
 cask|arc|Arc|off
 cask|google-chrome|Google Chrome|off
 cask|firefox|Firefox|off
+cask|firefox@developer-edition|Firefox Developer-Edition|on
+
 
 # --- Dev / CLI ---
 cask|visual-studio-code|Visual Studio Code|on

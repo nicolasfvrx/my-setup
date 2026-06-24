@@ -3,38 +3,56 @@
 # de la sélection via un Brewfile temporaire.
 # Dépend de : LAYERS (tableau), helpers.sh (logs), menu.sh.
 
-# Charge le catalogue de toutes les couches dans des tableaux parallèles :
-#   APP_TYPE  APP_ID  APP_LABEL  APP_DEFAULT
-# Format d'une ligne apps.list :  type|identifiant|libellé|on|off
+# Charge le catalogue de toutes les couches.
+# Apps (items)        : APP_TYPE  APP_ID  APP_LABEL  APP_DEFAULT
+# Plan du menu (rows) : CAT_KIND  CAT_TEXT  CAT_APP  CAT_DEFAULT
+#   - une ligne "# --- Nom ---" devient un en-tête (CAT_KIND=header)
+#   - une ligne "type|id|libellé|on/off" devient un item, lié à un index APP_*
 load_apps() {
   APP_TYPE=(); APP_ID=(); APP_LABEL=(); APP_DEFAULT=()
-  local layer f type id label def
+  CAT_KIND=(); CAT_TEXT=(); CAT_APP=(); CAT_DEFAULT=()
+  local layer f line trimmed type id label def appidx
   for layer in "${LAYERS[@]}"; do
     f="$layer/apps.list"
     [[ -f "$f" ]] || continue
-    while IFS='|' read -r type id label def || [[ -n "$type" ]]; do
-      type="${type%$'\r'}"; def="${def%$'\r'}"   # tolère un CR résiduel
-      case "$type" in ''|'#'*) continue ;; esac   # ignore vides + commentaires
-      APP_TYPE+=("$type")
-      APP_ID+=("$id")
-      APP_LABEL+=("$label")
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      line="${line%$'\r'}"
+
+      # En-tête de catégorie :  # --- Nom ---
+      if [[ "$line" =~ ^[[:space:]]*#[[:space:]]*-+[[:space:]]+(.+)[[:space:]]+-+[[:space:]]*$ ]]; then
+        CAT_KIND+=("header"); CAT_TEXT+=("${BASH_REMATCH[1]}"); CAT_APP+=("-1"); CAT_DEFAULT+=("")
+        continue
+      fi
+
+      # Commentaire simple ou ligne vide → ignore
+      trimmed="${line#"${line%%[![:space:]]*}"}"
+      [[ -z "$trimmed" || "$trimmed" == '#'* ]] && continue
+
+      # Ligne d'app : type|id|libellé|on/off
+      IFS='|' read -r type id label def <<< "$line"
+      [[ -z "$type" ]] && continue
+      APP_TYPE+=("$type"); APP_ID+=("$id"); APP_LABEL+=("$label")
       if [[ "$def" == "on" ]]; then APP_DEFAULT+=("on"); else APP_DEFAULT+=("off"); fi
+
+      appidx=$(( ${#APP_TYPE[@]} - 1 ))
+      CAT_KIND+=("item"); CAT_TEXT+=("$label ($type)"); CAT_APP+=("$appidx"); CAT_DEFAULT+=("${APP_DEFAULT[$appidx]}")
     done < "$f"
   done
 }
 
-# Prépare le menu (MENU_LABELS / MENU_DEFAULTS) à partir du catalogue chargé.
+# Prépare le menu (MENU_*) à partir du plan chargé (en-têtes inclus).
 build_app_menu() {
-  MENU_LABELS=(); MENU_DEFAULTS=()
+  MENU_LABELS=(); MENU_DEFAULTS=(); MENU_KIND=(); MENU_APP=()
   local i
-  for ((i = 0; i < ${#APP_TYPE[@]}; i++)); do
-    MENU_LABELS+=("${APP_LABEL[$i]} (${APP_TYPE[$i]})")
-    MENU_DEFAULTS+=("${APP_DEFAULT[$i]}")
+  for ((i = 0; i < ${#CAT_KIND[@]}; i++)); do
+    MENU_KIND+=("${CAT_KIND[$i]}")
+    MENU_LABELS+=("${CAT_TEXT[$i]}")
+    MENU_DEFAULTS+=("${CAT_DEFAULT[$i]:-off}")
+    MENU_APP+=("${CAT_APP[$i]}")
   done
 }
 
-# Initialise app_selected depuis les valeurs par défaut du catalogue
-# (utilisé en mode non interactif).
+# Initialise app_selected depuis les valeurs par défaut (mode non interactif).
 apps_select_defaults() {
   app_selected=()
   local i
