@@ -20,6 +20,7 @@ cask|visual-studio-code|Visual Studio Code|on
 cask|ghostty|Ghostty (terminal)|on
 cask|iterm2|iTerm2|off
 cask|docker|Docker Desktop|off
+cask|xpipe-io/tap/xpipe|XPipe (connexions/SSH)|on
 brew|git|Git|on
 brew|gh|GitHub CLI|on
 brew|node|Node.js|off
