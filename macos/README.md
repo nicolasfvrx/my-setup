@@ -4,6 +4,19 @@ Installe les applications (Homebrew) et configure l'OS (réglages système, Dock
 fond d'écran) via un **menu interactif**, de façon **idempotente** (rejouable
 sans casse) et **par couches de version**.
 
+## Démarrage rapide (one-liner)
+
+Sur une machine neuve, une seule commande récupère le repo et lance le menu :
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/nicolasfvrx/my-setup/master/macos/bootstrap.sh)"
+```
+
+> Utilise bien la forme `bash -c "$(curl …)"` (pas `curl … | bash`) : elle garde
+> ton terminal sur l'entrée standard, donc le menu interactif fonctionne.
+> Le repo est cloné dans `~/.my-setup`. Pour tester une autre branche :
+> `MY_SETUP_BRANCH=W.I.P /bin/bash -c "$(curl -fsSL …/W.I.P/macos/bootstrap.sh)"`.
+
 ## Prérequis
 
 - Un **compte administrateur** (Homebrew utilise `sudo` en interne pour créer
